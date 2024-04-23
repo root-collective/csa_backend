@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ["localhost", "192.168.2.102"]
 INSTALLED_APPS = [
     "boxmanagement",
     "rest_framework",
+    "drf_spectacular",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -124,4 +125,14 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-REST_FRAMEWORK = {}
+REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "CSA Backend",
+    "DESCRIPTION": "A backend for our root collective app",
+    "VERSION": "0.0.1",
+    "SERVE_INCLUDE_SCHEMA": False,
+    # OTHER SETTINGS
+}
