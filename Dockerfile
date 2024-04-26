@@ -1,5 +1,5 @@
 # Verwende Ubuntu als Basisimage
-FROM ubuntu:latest
+FROM ubuntu:jammy
 
 # Setze Arbeitsverzeichnis im Container
 WORKDIR /app
