@@ -12,6 +12,7 @@ pytest-django = "*"
 drf-spectacular = "*"
 django-environ = "*"
 django-cors-headers = "*"
+gunicorn = "*"
 
 [dev-packages]
 

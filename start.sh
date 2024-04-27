@@ -4,4 +4,5 @@
 pipenv run python manage.py migrate
 
 # Starte den Django-Server
-pipenv run python manage.py runserver 0.0.0.0:8000
+# pipenv run python manage.py runserver 0.0.0.0:8000
+gunicorn -c gunicorn.conf.py csa_backend.wsgi
