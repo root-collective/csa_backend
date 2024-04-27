@@ -21,5 +21,8 @@ COPY . .
 # Exponiere den Port, den Django verwenden wird (Standardmäßig 8000)
 EXPOSE 8000
 
-# Führe das Django-Projekt
-CMD ["pipenv", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]
+# Kopiere das Startskript in den Container
+COPY start.sh .
+
+# Führe das Startskript aus
+CMD ["./start.sh"]
