@@ -151,8 +151,8 @@ SPECTACULAR_SETTINGS = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    "https://root-collective.github.io/box-management-app",
-    "localhost",
-    "192.168.2.102",
+    "https://root-collective.github.io",
+    "http://localhost",
+    "http://192.168.2.102",
 ]
 # env.list("CORS_ALLOWED_ORIGINS")
