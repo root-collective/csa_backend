@@ -12,32 +12,24 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 import environ
 from pathlib import Path
+from django.core.management.utils import get_random_secret_key
 
-# env = environ.Env(
-#     # set casting, default value
-#     DEBUG=(bool, False)
-# )
+env = environ.Env()
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-# environ.Env.read_env(BASE_DIR / ".env")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-@h4dyl5f_wtm5oxuw9=nh!pxhg$kb+p*h2+fuvfg8-2^x5*-rx"
+SECRET_KEY = env("SECRET_KEY", default=get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True  # env("DEBUG")
+DEBUG = env.bool("DEBUG", default=True)
 
-ALLOWED_HOSTS = [
-    "root-collective-api.familie-koenders.de",
-    "localhost",
-    "192.168.2.102",
-]
-# env.list("ALLOWED_HOSTS")
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["localhost"])
 
 # Application definition
 
@@ -143,16 +135,11 @@ REST_FRAMEWORK = {
 }
 
 SPECTACULAR_SETTINGS = {
-    "TITLE": "CSA Backend",
+    "TITLE": "Root Collective Backend",
     "DESCRIPTION": "A backend for our root collective app",
     "VERSION": "0.0.1",
     "SERVE_INCLUDE_SCHEMA": False,
     # OTHER SETTINGS
 }
 
-CORS_ALLOWED_ORIGINS = [
-    "https://root-collective.github.io",
-    "http://localhost",
-    "http://192.168.2.102",
-]
-# env.list("CORS_ALLOWED_ORIGINS")
+CORS_ALLOWED_ORIGINS = env.list("CORS_ALLOWED_ORIGINS", default=["http://localhost"])
