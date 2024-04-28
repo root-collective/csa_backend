@@ -23,6 +23,7 @@ EXPOSE 8000
 
 # Kopiere das Startskript in den Container
 COPY start.sh .
+RUN chmod +x start.sh
 
 # Führe das Startskript aus
 CMD ["./start.sh"]

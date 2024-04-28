@@ -12,4 +12,4 @@ pipenv run python manage.py collectstatic --noinput
 
 # Starte den Django-Server
 # pipenv run python manage.py runserver 0.0.0.0:8000
-gunicorn -c gunicorn.conf.py csa_backend.wsgi
+pipenv run gunicorn --chdir=/app -c gunicorn.conf.py csa_backend.wsgi
