@@ -15,6 +15,7 @@ django-cors-headers = "*"
 gunicorn = "*"
 tzdata = "*"
 whitenoise = "*"
+factory-boy = "*"
 
 [dev-packages]
 

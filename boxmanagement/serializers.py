@@ -3,9 +3,13 @@ from .models import Station, Transfer
 
 
 class StationSerializer(serializers.ModelSerializer):
+    estimate_boxes = serializers.IntegerField(
+        source="estimate_boxes_property", read_only=True
+    )
+
     class Meta:
         model = Station
-        read_only = ("id",)
+        read_only = ("id", "estimate_boxes")
         fields = ("name", "location") + read_only
 
 
