@@ -8,3 +8,5 @@ services:
     pull_policy: build
     env_file:
       - stack.env
+    volumes:
+      - ${DATABASE_VOLUME}:/app/database
