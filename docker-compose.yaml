@@ -8,4 +8,4 @@ services:
       - "8000:8000"
     pull_policy: build
     env_file:
-      - ../stack.env
+      - stack.env
