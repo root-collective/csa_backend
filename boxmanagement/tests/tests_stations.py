@@ -16,9 +16,7 @@ def test_station_list_view():
     client = APIClient()
 
     # Fordere die Liste der Stationen an
-    url = reverse(
-        "station-list"
-    )  # Annahme: Der Name der URL für die Liste der Stationen ist 'station-list'
+    url = reverse("station-list")
     response = client.get(url)
 
     # Überprüfe, ob die Anfrage erfolgreich war (HTTP-Statuscode 200)
@@ -28,6 +26,46 @@ def test_station_list_view():
     assert len(response.data) == 2
     assert response.data[0]["name"] == "Station1"
     assert response.data[1]["name"] == "Station2"
+
+
+@pytest.mark.django_db
+def test_station_post_not_allowed():
+    client = APIClient()
+
+    url = reverse("station-list")
+    response = client.post(url)
+
+    # Überprüfe, ob die Anfrage mit Status 405 beantwortet wird
+    assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED
+
+
+@pytest.mark.django_db
+def test_station_patch_allowed():
+    # Erstelle Station
+    s = StationFactory()
+
+    client = APIClient()
+
+    new_location = "FarFarAway"
+    data = {"location": new_location}
+    url = reverse("station-detail", kwargs={"pk": s.id})
+    response = client.patch(url, data)
+
+    assert response.status_code == status.HTTP_200_OK
+    s.refresh_from_db()
+    assert s.location == new_location
+
+
+@pytest.mark.django_db
+def test_station_delete_not_allowed():
+    s = StationFactory()
+
+    client = APIClient()
+
+    url = reverse("station-detail", kwargs={"pk": s.id})
+    response = client.delete(url)
+
+    assert response.status_code == status.HTTP_405_METHOD_NOT_ALLOWED
 
 
 @pytest.mark.django_db
