@@ -16,6 +16,7 @@ gunicorn = "*"
 tzdata = "*"
 whitenoise = "*"
 factory-boy = "*"
+pytz = "*"
 
 [dev-packages]
 

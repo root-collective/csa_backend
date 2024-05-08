@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Station, Transfer
+from .models import Station, Transfer, Inventory
 
 
 class StationSerializer(serializers.ModelSerializer):
@@ -18,3 +18,10 @@ class TransferSerializer(serializers.ModelSerializer):
         model = Transfer
         read_only = ("id", "timestamp")
         fields = ("from_station", "to_station", "num_boxes", "notes") + read_only
+
+
+class InventorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Inventory
+        read_only = ("id", "timestamp")
+        fields = ("station", "num_boxes", "notes") + read_only

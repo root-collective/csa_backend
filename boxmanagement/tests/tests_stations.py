@@ -1,28 +1,27 @@
+from datetime import datetime
+from sqlite3 import Timestamp
+import pytz
 import pytest
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
-from boxmanagement.factories import StationFactory, TransferFactory
+from boxmanagement.factories import InventoryFactory, StationFactory, TransferFactory
 from boxmanagement.models import Station
 
 
 @pytest.mark.django_db
 def test_station_list_view():
-    # Erstelle ein paar Testdaten
+    # create stations
     Station.objects.create(name="Station1", location="Location1")
     Station.objects.create(name="Station2", location="Location2")
 
-    # Erstelle einen APIClient
     client = APIClient()
 
-    # Fordere die Liste der Stationen an
     url = reverse("station-list")
     response = client.get(url)
 
-    # Überprüfe, ob die Anfrage erfolgreich war (HTTP-Statuscode 200)
     assert response.status_code == status.HTTP_200_OK
 
-    # Überprüfe, ob die erwarteten Daten in der Antwort sind
     assert len(response.data) == 2
     assert response.data[0]["name"] == "Station1"
     assert response.data[1]["name"] == "Station2"
@@ -86,6 +85,17 @@ def test_station_boxestimate_with_single_transfers():
 
 
 @pytest.mark.django_db
+def test_station_boxestimate_with_multiple_transfers():
+    source = StationFactory()
+    target = StationFactory()
+    transfer1 = TransferFactory(to_station=target, from_station=source)
+    transfer2 = TransferFactory(to_station=target, from_station=source)
+    transfered_boxes = transfer1.num_boxes + transfer2.num_boxes
+    assert source.estimate_boxes_property == -1 * transfered_boxes
+    assert target.estimate_boxes_property == transfered_boxes
+
+
+@pytest.mark.django_db
 def test_station_boxestimate_with_circle_transfers():
     s1 = StationFactory()
     s2 = StationFactory()
@@ -97,3 +107,26 @@ def test_station_boxestimate_with_circle_transfers():
     assert s1.estimate_boxes_property == 0
     assert s2.estimate_boxes_property == 0
     assert s3.estimate_boxes_property == 0
+
+
+@pytest.mark.django_db
+def test_station_boxes_with_inventory():
+    station = StationFactory()
+    inv1 = InventoryFactory(
+        station=station, num_boxes=1000, timestamp=datetime.now(tz=pytz.UTC)
+    )
+    assert station.estimate_boxes_property == inv1.num_boxes
+
+    t1 = TransferFactory(from_station=station, num_boxes=500)
+    station.refresh_from_db()
+    assert station.estimate_boxes_property == inv1.num_boxes - t1.num_boxes
+
+    inv2 = InventoryFactory(
+        station=station, num_boxes=100, timestamp=datetime.now(tz=pytz.UTC)
+    )
+    station.refresh_from_db()
+    assert station.estimate_boxes_property == inv2.num_boxes
+
+    t2 = TransferFactory(to_station=station, num_boxes=200)
+    station.refresh_from_db()
+    assert station.estimate_boxes_property == inv2.num_boxes + t2.num_boxes
